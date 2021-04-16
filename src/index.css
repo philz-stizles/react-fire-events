@@ -11,3 +11,15 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.ui.fixed.menu {
+  background-image: linear-gradient(
+    135deg, 
+    rgb(24, 42, 115), 0%, 
+    rgb(33, 138, 174), 69%, 
+    rgb(32, 167, 172) 89%) !important;
+}
+
+.ui.main.container {
+  margin: 7em;
+}
