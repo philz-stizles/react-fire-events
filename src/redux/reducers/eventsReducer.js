@@ -1,3 +1,5 @@
+import { CREATE_EVENT, UPDATE_EVENT } from "../types"
+
 const initialState = {
   items: []
 }
@@ -5,7 +7,10 @@ const initialState = {
 const eventsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
 
-  case '':
+  case CREATE_EVENT:
+    return { ...state, ...payload }
+
+  case UPDATE_EVENT:
     return { ...state, ...payload }
 
   default:

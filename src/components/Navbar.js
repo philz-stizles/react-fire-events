@@ -1,35 +1,51 @@
-import React, { Fragment, useState } from 'react';
-import { Button, Dropdown, Menu, Container } from 'semantic-ui-react';
-import { useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import React, { Fragment } from 'react';
+import { Button, Dropdown, Menu, Container, Image } from 'semantic-ui-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink, useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { openModal } from '../redux/actions/modalActions';
+import { fireSignOut } from '../api/firebaseServices';
+
+import defaultAvatar from './../assets/img/user.png';
 
 const Navbar = ({openForm}) => {
-  const [activeItem, setActiveItem] = useState('home');
+  const { auth: { isAuthenticated, currentUser } } = useSelector(state => ({...state}));
+  console.log(currentUser)
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-  const { auth: { isAuthenticated } } = useSelector(state => ({...state}));
+  const handleSignOut = async () => {
+    try {
+      await fireSignOut();
+      history.push('/');
+    } catch (error) {
+      toast.error(error.message)
+    }
+  }
 
-  const handleItemClick = (e, { name }) => setActiveItem(name);
-
-  const renderPrivateMenu = () => (
+  const renderPrivateMenu = (user) => (
     <Fragment>
-      <Menu.Item><Button onClick={() => openForm(true)} positive inverted content="Create Event" /></Menu.Item>
-      <Menu.Menu position='right'>
-        <Dropdown item text='Language'>
+      <Menu.Item as={NavLink} to="/events/create">
+        <Button positive inverted content="Create Event" />
+      </Menu.Item>
+      <Menu.Item position='right'>
+        <Image avatar spaced="right" src={(user && user.avatar) || defaultAvatar} />
+        <Dropdown pointing="top left" text={(user && user.name) || (user && user.email) || 'Visitor'}>
           <Dropdown.Menu>
-            <Dropdown.Item>English</Dropdown.Item>
-            <Dropdown.Item>Russian</Dropdown.Item>
-            <Dropdown.Item>Spanish</Dropdown.Item>
+            <Dropdown.Item as={Link} to="/events/create" text="Create Event" icon="plus" />
+            <Dropdown.Item as={Link} to={`/profile/${user.uid}`} text="Profile" icon="user" />
+            <Dropdown.Item onClick={handleSignOut} text="Logout" icon="power" />
           </Dropdown.Menu>
         </Dropdown>
-      </Menu.Menu>
+      </Menu.Item>
     </Fragment>
   )
   
   const renderPublicMenu = () => (
     <Fragment>
       <Menu.Item position="right">
-        <Button basic inverted content="Login" />
-        <Button basic inverted content="Register" style={{ marginLeft: '0.5em'}} />
+        <Button onClick={() => dispatch(openModal({ modalType: 'LoginForm' }))} basic inverted content="Login" />
+        <Button onClick={() => dispatch(openModal({ modalType: 'RegisterForm' }))} basic inverted content="Register" style={{ marginLeft: '0.5em'}} />
       </Menu.Item>
     </Fragment>
   )
@@ -37,10 +53,13 @@ const Navbar = ({openForm}) => {
   return (
     <Menu inverted fixed="top">
       <Container>
-        <Menu.Item as={NavLink} to="/" name='Re-vents' header active={activeItem === 'home'} onClick={handleItemClick} />
-        <Menu.Item name='Events' active={activeItem === 'messages'} onClick={handleItemClick}/>
-        <Menu.Item name='People' active={activeItem === 'messages'} onClick={handleItemClick}/>
-        { (isAuthenticated) && renderPrivateMenu() }
+        <Menu.Item exact as={NavLink} to="/" header>Re-vents</Menu.Item>
+
+        <Menu.Item as={NavLink} to="/events" header>Events</Menu.Item>
+
+        <Menu.Item as={NavLink} to="/people" header>People</Menu.Item>
+
+        { (isAuthenticated) && renderPrivateMenu(currentUser) }
         { (!isAuthenticated) && renderPublicMenu() }
       </Container>
     </Menu>

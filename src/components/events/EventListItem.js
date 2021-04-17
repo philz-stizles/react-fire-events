@@ -1,9 +1,10 @@
 import React from 'react';
-import { Segment, Item, Button, Icon, List } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Segment, Item, Button, Icon } from 'semantic-ui-react';
 import EventAttendeeList from './EventAttendeeList';
 
-const EventListItem = ({event}) => {
-  const { title, description, hostedBy, venue, city, date, attendees } = event;
+const EventListItem = ({ event, deleteEvent }) => {
+  const { id, title, description, hostedBy, venue, date, attendees } = event;
 
   return (
     <Segment.Group>
@@ -32,7 +33,8 @@ const EventListItem = ({event}) => {
 
       <Segment clearing>
         <div>{description}</div>
-        <Button color="teal" floated="right" content="View" />
+        <Button onClick={() => deleteEvent(id)} color="red" floated="right" content="Delete" />
+        <Button as={Link} to={`/events/${id}`} color="teal" floated="right" content="View" />
       </Segment>
     </Segment.Group>
   )
