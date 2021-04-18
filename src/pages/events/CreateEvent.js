@@ -1,10 +1,10 @@
 import React from 'react'
 import EventForm from '../../components/form/EventForm'
 
-const CreateEvent = () => {
+const CreateEvent = ({match}) => {
   return (
     <>
-      <EventForm />
+      <EventForm match={match} />
     </>
   )
 }

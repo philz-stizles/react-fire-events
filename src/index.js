@@ -9,8 +9,10 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 
 // Styles
-import './index.css';
 import 'semantic-ui-css/semantic.min.css';
+import 'react-toastify/dist/ReactToastify.min.css';
+import 'react-calendar/dist/Calendar.css';
+import './index.css';
 
 ReactDOM.render(
   <Provider store={store}>

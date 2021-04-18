@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const Profile = () => {
   const { currentUserProfile } = useSelector(state => state.profile);
-  // const { loading } = useSelector(state => state.async);
+  const { loading } = useSelector(state => state.async);
   const dispatch = useDispatch();
 
   return (

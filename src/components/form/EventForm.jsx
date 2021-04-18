@@ -7,10 +7,10 @@ import { updateEvent } from '../../redux/actions/eventActions';
 import CustomTextArea from './CustomTextArea';
 import CustomTextInput from './CustomTextInput';
 
-const EventForm = ({ closeForm, createEvent }) => {
+const EventForm = ({ closeForm, createEvent, match }) => {
   const dispatch = useDispatch();
   const selectedEvent = useSelector(state => {
-    return state.events.items.find(item => item.id === matchMedia.params.id);
+    return state.events.items.find(item => item.id === match.params.id);
   });
 
   const initialValues = {

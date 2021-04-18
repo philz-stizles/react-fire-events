@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 
 import Footer from './components/Footer';
@@ -12,24 +11,33 @@ import CreateEventPage from './pages/events/CreateEvent';
 import PeoplePage from './pages/People';
 import EventDetailPage from './pages/events/EventDetail';
 import ModalManager from './components/modals/ModalManager';
-import Profile from './pages/profile/Profile';
+import ProfilePage from './pages/user/Profile';
+import AccountPage from './pages/user/Account';
+import { useSelector } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import AppLoader from './components/AppLoader';
 
-function App() {
-  const [isFormOpen, setIsFormOpen] = useState(false)
+const App = () => {
+  const { initialized } = useSelector(state => state.async);
+
+  if(!initialized) return <AppLoader content="Loading app ..." />
+
   return (
     <>
       <ModalManager />
+      <ToastContainer position="bottom-right" hideProgressBar />
       <Route exact path="/" component={Home} />
       <Route path={'/(.+)'} render={() => (
         <>
-          <Navbar openForm={setIsFormOpen} />
+          <Navbar />
           <Container className="main">
             <Switch>
-              <Route exact path="/events" render={(props) => <EventsPage {...props} isFormOpen={isFormOpen} closeForm={setIsFormOpen} />} />
+              <Route exact path="/events" component={EventsPage} />
               <Route exact path="/events/create" component={CreateEventPage} />
               <Route exact path="/events/:id" component={EventDetailPage} />
               <Route exact path="/events" component={PeoplePage} />
-              <Route exact path="/profile/:id" component={Profile} />
+              <Route exact path="/account" component={AccountPage} />
+              <Route exact path="/profile/:id" component={ProfilePage} />
             </Switch>
           </Container>
           <Footer />

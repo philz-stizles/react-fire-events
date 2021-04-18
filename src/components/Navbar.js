@@ -16,8 +16,8 @@ const Navbar = ({openForm}) => {
 
   const handleSignOut = async () => {
     try {
-      await fireSignOut();
       history.push('/');
+      await fireSignOut();
     } catch (error) {
       toast.error(error.message)
     }
@@ -33,7 +33,8 @@ const Navbar = ({openForm}) => {
         <Dropdown pointing="top left" text={(user && user.name) || (user && user.email) || 'Visitor'}>
           <Dropdown.Menu>
             <Dropdown.Item as={Link} to="/events/create" text="Create Event" icon="plus" />
-            <Dropdown.Item as={Link} to={`/profile/${user.uid}`} text="Profile" icon="user" />
+            <Dropdown.Item as={Link} to={`/profile/${user.uid}`} text="My Profile" icon="user" />
+            <Dropdown.Item as={Link} to={`/account`} text="My account" icon="settings" />
             <Dropdown.Item onClick={handleSignOut} text="Logout" icon="power" />
           </Dropdown.Menu>
         </Dropdown>

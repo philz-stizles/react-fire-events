@@ -1,4 +1,4 @@
-import { SIGN_IN, SIGN_OUT } from "../types";
+import { APP_LOADED, SIGN_IN, SIGN_OUT } from "../types";
 import firebase from '../../api/firebase';
 
 export const signin = (user) => {
@@ -13,8 +13,10 @@ export const verifyAuth = () => {
     return firebase.auth().onAuthStateChanged(user => {
       if(user) {
         dispatch(signin(user));
+        dispatch({ type: APP_LOADED })
       } else {
         dispatch(signout())
+        dispatch({ type: APP_LOADED })
       }
     });
   }

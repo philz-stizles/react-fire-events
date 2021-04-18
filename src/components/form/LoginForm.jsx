@@ -41,7 +41,7 @@ const LoginForm = () => {
             <CustomTextInput name="email" placeholder="Email Address" />
             <CustomTextInput type="password" name="password" placeholder="Password" />
 
-            {(errors.auth && <Label basic color="red" style={{ marginButtom: 10 }} content={errors.auth} />)}
+            {(errors.auth && <Label basic color="red" style={{ marginBottom: 10 }} content={errors.auth} />)}
 
             <Button 
               type="submit"
