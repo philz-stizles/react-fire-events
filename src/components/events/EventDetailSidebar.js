@@ -1,7 +1,10 @@
 import React from "react";
-import { Segment, Item } from "semantic-ui-react";
+import { Link } from "react-router-dom";
+import { Segment, Item, Label } from "semantic-ui-react";
 
-const EventDetailSidebar = () => {
+const EventDetailSidebar = ({ attendees, hostUid }) => {
+    const count = attendees.length;
+
     return (
         <>
             <Segment
@@ -11,27 +14,26 @@ const EventDetailSidebar = () => {
                 secondary
                 inverted
                 color="teal"
-            >
-                2 People Going
-            </Segment>
+            >{(count > 0 ) ? (count === 1) ? 'One Person is going' : `${count} People are going` : 'No attendees yet'}</Segment>
             <Segment attached>
                 <Item.Group relaxed divided>
-                <Item style={{ position: "relative" }}>
-                    <Item.Image size="tiny" src="/assets/user.png" />
-                    <Item.Content verticalAlign="middle">
-                    <Item.Header as="h3">
-                        <span>Tom</span>
-                    </Item.Header>
-                    </Item.Content>
-                </Item>
-                <Item style={{ position: "relative" }}>
-                    <Item.Image size="tiny" src="/assets/user.png" />
-                    <Item.Content verticalAlign="middle">
-                    <Item.Header as="h3">
-                        <span>Bob</span>
-                    </Item.Header>
-                    </Item.Content>
-                </Item>
+                    {
+                        attendees.map(({ id, displayName, photoURL}) => {
+                            return (
+                                <Item key={id} as={Link} to={`/profile/${id}`} style={{ position: "relative" }}>
+                                    {(hostUid === id) && (
+                                        <Label style={{ position: "absolute" }} color="orange" ribbon="right"content="Host" />
+                                    )}
+                                    <Item.Image size="tiny" src={photoURL} />
+                                    <Item.Content verticalAlign="middle">
+                                    <Item.Header as="h3">
+                                        <span>{displayName}</span>
+                                    </Item.Header>
+                                    </Item.Content>
+                                </Item>
+                            )
+                        })
+                    }
                 </Item.Group>
             </Segment>
         </>

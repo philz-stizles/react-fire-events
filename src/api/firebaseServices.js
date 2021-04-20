@@ -2,6 +2,13 @@ import { toast } from 'react-toastify';
 import firebase from './firebase';
 import { fireSetUserProfileData } from './firestoreServices';
 
+export const firebaseObjectToArray = (snapshot) => {
+  if(snapshot) {
+    console.log(snapshot)
+    return Object.entries(snapshot).map(e => Object.assign({}, e[1], { id: e[0]} ));
+  } 
+}
+
 export const signInWithEmail = ({email, password}) => {
   return firebase.auth().signInWithEmailAndPassword(email, password);
 }
@@ -54,3 +61,32 @@ export const fireUpdateUserPassword = (credentials) => {
   const user = firebase.auth().currentUser;
   return user.updatePassword(credentials.newPassword);
 }
+
+export const uploadToFirebaseStorage = (file, filename) => {
+  const user = firebase.auth().currentUser;
+  const storageRef = firebase.storage().ref();
+  return storageRef.child(`${user.uid}/user_images/${filename}`).put(file);
+}
+
+export const deleteFromFirebaseStorage = (filename) => {
+  const userUid = firebase.auth().currentUser.uid;
+  const storageRef = firebase.storage().ref();
+  const photoRef = storageRef.child(`${userUid}/user_images/${filename}`);
+  return photoRef.delete();
+}
+
+export const addEventChatComment = (eventId, values) => {
+  const user = firebase.auth().currentUser;
+  const newComment = {
+    uid: user.uid,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    text: values.comment,
+    date: Date.now(),
+    parentId: values.parentId
+  }
+  
+  return firebase.database().ref(`chat/${eventId}`).push(newComment);
+}
+
+export const getEventChatRef = (eventId) => firebase.database().ref(`chat/${eventId}`).orderByKey();

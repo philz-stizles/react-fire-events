@@ -8,9 +8,10 @@ import { fireSignOut } from '../api/firebaseServices';
 
 import defaultAvatar from './../assets/img/user.png';
 
-const Navbar = ({openForm}) => {
-  const { auth: { isAuthenticated, currentUser } } = useSelector(state => ({...state}));
-  console.log(currentUser)
+const Navbar = () => {
+  const { isAuthenticated, currentUser } = useSelector(state => state.auth);
+  const {  currentUserProfile } = useSelector(state => state.profile);
+  console.log(currentUser, currentUserProfile)
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -29,11 +30,11 @@ const Navbar = ({openForm}) => {
         <Button positive inverted content="Create Event" />
       </Menu.Item>
       <Menu.Item position='right'>
-        <Image avatar spaced="right" src={(user && user.avatar) || defaultAvatar} />
-        <Dropdown pointing="top left" text={(user && user.name) || (user && user.email) || 'Visitor'}>
+        <Image avatar spaced="right" src={(user?.photoURL) || defaultAvatar} />
+        <Dropdown pointing="top left" text={(user?.displayName) || (user?.email) || 'Visitor'}>
           <Dropdown.Menu>
             <Dropdown.Item as={Link} to="/events/create" text="Create Event" icon="plus" />
-            <Dropdown.Item as={Link} to={`/profile/${user.uid}`} text="My Profile" icon="user" />
+            <Dropdown.Item as={Link} to={`/profile/${user?.id || user?.uid}`} text="My Profile" icon="user" />
             <Dropdown.Item as={Link} to={`/account`} text="My account" icon="settings" />
             <Dropdown.Item onClick={handleSignOut} text="Logout" icon="power" />
           </Dropdown.Menu>
@@ -60,7 +61,7 @@ const Navbar = ({openForm}) => {
 
         <Menu.Item as={NavLink} to="/people" header>People</Menu.Item>
 
-        { (isAuthenticated) && renderPrivateMenu(currentUser) }
+        { (isAuthenticated) && renderPrivateMenu(currentUserProfile) }
         { (!isAuthenticated) && renderPublicMenu() }
       </Container>
     </Menu>

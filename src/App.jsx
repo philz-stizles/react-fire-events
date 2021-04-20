@@ -16,6 +16,7 @@ import AccountPage from './pages/user/Account';
 import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import AppLoader from './components/AppLoader';
+import ErrorPage from './pages/errors/Error';
 
 const App = () => {
   const { initialized } = useSelector(state => state.async);
@@ -34,10 +35,12 @@ const App = () => {
             <Switch>
               <Route exact path="/events" component={EventsPage} />
               <Route exact path="/events/create" component={CreateEventPage} />
+              <Route exact path="/events/create/:id" component={CreateEventPage} />
               <Route exact path="/events/:id" component={EventDetailPage} />
               <Route exact path="/events" component={PeoplePage} />
               <Route exact path="/account" component={AccountPage} />
               <Route exact path="/profile/:id" component={ProfilePage} />
+              <Route exact path="/error" component={ErrorPage} />
             </Switch>
           </Container>
           <Footer />

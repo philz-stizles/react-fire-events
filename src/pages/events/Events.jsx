@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Grid } from 'semantic-ui-react';
 import EventList from '../../components/events/EventList';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,57 +9,40 @@ import useFirestoreCollection from '../../api/hooks/useFirestoreCollection';
 import { listenForEvents } from '../../redux/actions/eventActions';
 
 const Events = () => {
+  const [predicate, setPredicate] = useState(new Map([
+    ['startDate', new Date()],
+    ['filter', 'all']
+  ]));
   const { items: events } = useSelector(state => state.events);
-  console.log(events);
   const { loading } = useSelector(state => state.async);
   const dispatch = useDispatch();
 
   useFirestoreCollection({
-    query: () => listenToEventsFromFirestore(),
+    query: () => listenToEventsFromFirestore(predicate),
     data: events => dispatch(listenForEvents(events)),
-    deps: [dispatch]
+    deps: [dispatch, predicate]
   });
 
-  // METHOD 2
-  // useEffect(() => {
-  //   // Set loading to true in redux 
-  //   dispatch(asyncActionStart());
-
-  //   // Start listening to data from firebase
-  //   const unSubscribe = listenToEventsFromFirestore({
-  //     next: snapshot => {
-  //       console.log(snapshot)
-  //       dispatch(listenForEvents(snapshot.docs.map(docSnapshot => transformSnapshot(docSnapshot))));
-
-  //       // Set loading to false in redux 
-  //       dispatch(asyncActionFinish());
-  //     },
-  //     error: error => {
-  //       console.log(error)
-  //       dispatch(asyncActionError());
-  //     },
-  //     complete: () => console.log('You will never see this message')
-  //   });
-
-  //   return unSubscribe; // Dispose of the subscription when component unmounts
-
-  // }, [dispatch]);
+  const handleSetPredicate = (key, value) => {
+    setPredicate(new Map(predicate.set(key, value)));
+  }
 
   return (
     <Grid>
       <Grid.Column width={10}>
-      {
-        (loading) && (
-          <>
-            <EventListItemPlaceholder />
-          </>
-        )
-      }
+        {
+          (loading) && (
+            <>
+              <EventListItemPlaceholder />
+              <EventListItemPlaceholder />
+            </>
+          )
+        }
         <EventList events={events} />
       </Grid.Column>
 
       <Grid.Column width={6}>
-        <EventFilters />
+        <EventFilters predicate={predicate} setPredicate={handleSetPredicate} loading={loading} />
       </Grid.Column>
     </Grid>
   )

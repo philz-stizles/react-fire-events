@@ -1,7 +1,38 @@
-import React from "react";
-import { Header, Segment, Comment, Form, Button } from "semantic-ui-react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { Header, Segment, Comment } from "semantic-ui-react";
+import { formatDistance } from 'date-fns';
+import { getEventChatRef, firebaseObjectToArray } from "../../api/firebaseServices";
+import { listenToEventChats } from "../../redux/actions/eventActions";
+import EventChatForm from "../form/EventChatForm";
+import { CLEAR_EVENT_CHAT } from "../../redux/types";
+import { createDataTree } from "../../utils";
 
-const EventDetailChat = () => {
+const EventDetailChat = ({ eventId }) => {
+  const [showReplyForm, setShowReplyForm] = useState({ isOpen: false, target: null });
+  const { comments }= useSelector(state => state.events);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getEventChatRef(eventId).on('value', snapshot => {
+      if(!snapshot.exists()) return ;
+      console.log(snapshot.val());
+      // dispatch(listenToEventChats(firebaseObjectToArray(snapshot.val())));
+      dispatch(listenToEventChats(firebaseObjectToArray(snapshot.val()).reverse()));
+    });
+
+    return () => {
+      dispatch({ type: CLEAR_EVENT_CHAT });
+      getEventChatRef().off();
+    }
+
+  }, [eventId, dispatch])
+
+  const handleCloseReplyForm = () => {
+    setShowReplyForm({ isOpen: false, target: null })
+  }
+
   return (
     <>
       <Segment textAlign="center" attached="top" inverted color="teal" style={{ border: "none" }}>
@@ -9,72 +40,58 @@ const EventDetailChat = () => {
       </Segment>
 
       <Segment attached>
+        <EventChatForm eventId={eventId} parentId={0} closeForm={setShowReplyForm} />
         <Comment.Group>
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Matt</Comment.Author>
-              <Comment.Metadata>
-                <div>Today at 5:42PM</div>
-              </Comment.Metadata>
-              <Comment.Text>How artistic!</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Elliot Fu</Comment.Author>
-              <Comment.Metadata>
-                <div>Yesterday at 12:30AM</div>
-              </Comment.Metadata>
-              <Comment.Text>
-                <p>
-                  This has been very useful for my research. Thanks as well!
-                </p>
-              </Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-            <Comment.Group>
-              <Comment>
-                <Comment.Avatar src="/assets/user.png" />
+          {
+            createDataTree(comments).map(({ id, uid, photoURL, displayName, text, date, childNodes }) => (
+              <Comment key={id}>
+                <Comment.Avatar src={photoURL || '/assets/user.png'} />
                 <Comment.Content>
-                  <Comment.Author as="a">Jenny Hess</Comment.Author>
+                  <Comment.Author as={Link} to={`/profile/${uid}`}>{displayName}</Comment.Author>
                   <Comment.Metadata>
-                    <div>Just now</div>
+                    <div>{formatDistance(date, new Date())}</div>
                   </Comment.Metadata>
-                  <Comment.Text>Elliot you are always so right :)</Comment.Text>
+                  <Comment.Text>{text.split('\n').map((text, i) => <span key={i}>{text}<br /></span>)}</Comment.Text>
                   <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
+                    <Comment.Action 
+                      onClick={() => setShowReplyForm({ isOpen: true, target: id })}>Reply</Comment.Action>
+                    {
+                      (showReplyForm.isOpen && showReplyForm.target === id) 
+                      && <EventChatForm eventId={eventId} parentId={id} closeForm={handleCloseReplyForm} />
+                    }
                   </Comment.Actions>
                 </Comment.Content>
+                {
+                  (childNodes.length > 0) && (
+                    <Comment.Group>
+                      {
+                        childNodes.reverse().map(child => (
+                          <Comment key={child.id}>
+                            <Comment.Avatar src={child.photoURL || '/assets/user.png'} />
+                            <Comment.Content>
+                              <Comment.Author as={Link} to={`/profile/${child.uid}`}>{child.displayName}</Comment.Author>
+                              <Comment.Metadata>
+                                <div>{formatDistance(child.date, new Date())}</div>
+                              </Comment.Metadata>
+                              <Comment.Text>{child.text.split('\n').map((text, i) => <span key={i}>{text}<br /></span>)}</Comment.Text>
+                              <Comment.Actions>
+                                <Comment.Action 
+                                  onClick={() => setShowReplyForm({ isOpen: true, target: child.id })}>Reply</Comment.Action>
+                                {
+                                  (showReplyForm.isOpen && showReplyForm.target === child.id) 
+                                  && <EventChatForm eventId={eventId} parentId={child.parentId} closeForm={handleCloseReplyForm} />
+                                }
+                              </Comment.Actions>
+                            </Comment.Content>
+                          </Comment>
+                        ))
+                      }
+                    </Comment.Group>
+                  )
+                }
               </Comment>
-            </Comment.Group>
-          </Comment>
-
-          <Comment>
-            <Comment.Avatar src="/assets/user.png" />
-            <Comment.Content>
-              <Comment.Author as="a">Joe Henderson</Comment.Author>
-              <Comment.Metadata>
-                <div>5 days ago</div>
-              </Comment.Metadata>
-              <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-              <Comment.Actions>
-                <Comment.Action>Reply</Comment.Action>
-              </Comment.Actions>
-            </Comment.Content>
-          </Comment>
-
-          <Form reply>
-            <Form.TextArea />
-            <Button content="Add Reply" labelPosition="left" icon="edit" primary/>
-          </Form>
+            ))
+          }
         </Comment.Group>
       </Segment>
     </>

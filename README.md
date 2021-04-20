@@ -14,7 +14,9 @@ yup - makes validation extremely easy
 FIREBASE
 1.) firebase
     -- Good for chat applications
+    -- Cost: 
 2.) Firestore
+    -- Cost: Firestore is based on the number of queries
     -- It is optimized for reading data rather than writing data
     -- NoSQL database
     -- More structured and scalable than firebase
@@ -49,3 +51,7 @@ react-calendar
 DATETIME
 date-fns - Used to normalize js dates
 Note that react-datepicker also uses date-fns. If you are having any issues, try using the same version that datepicker is using => npm ls date-fns = to see which packages depend on it in your app
+
+
+ASYNCHRONOUS
+redux-thunk allows us to use the store dispatch function inside our action creators

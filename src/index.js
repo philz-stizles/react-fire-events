@@ -13,10 +13,12 @@ import 'semantic-ui-css/semantic.min.css';
 import 'react-toastify/dist/ReactToastify.min.css';
 import 'react-calendar/dist/Calendar.css';
 import './index.css';
+import ScrollToTop from './components/ScrollToTop';
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
+      <ScrollToTop />
       <App />
     </BrowserRouter>
   </Provider>,

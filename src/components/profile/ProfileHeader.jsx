@@ -3,16 +3,16 @@ import { Button, Divider, Grid, Header, Item, Reveal, Segment, Statistic } from 
 
 import defaultAvatar from './../../assets/img/user.png';
 
-const ProfileHeader = ({user}) => {
+const ProfileHeader = ({ isCurrentUser, profile: user}) => {
   return (
     <Segment>
       <Grid>
         <Grid.Column width={12}>
           <Item.Group>
             <Item>
-              <Item.Image avatar size="small" src={(user && user.avatar) || defaultAvatar} />
+              <Item.Image avatar size="small" src={(user && user.photoURL) || defaultAvatar} />
               <Item.Content verticalAlign="middle">
-                <Header as="h1" style={{ display: 'block', marginBottom: 10 }} content="Display name" />
+                <Header as="h1" style={{ display: 'block', marginBottom: 10 }} content={user.displayName} />
               </Item.Content>
             </Item>
           </Item.Group>
@@ -24,12 +24,18 @@ const ProfileHeader = ({user}) => {
             <Statistic label="Following" value={5} />
           </Statistic.Group>
 
-          <Divider />
+          {
+            (!isCurrentUser) && (
+              <>
+                <Divider />
 
-          <Reveal animated="move">
-            <Reveal.Content visible style={{width: '100%'}}><Button fluid color="teal" content="Following" /></Reveal.Content>
-            <Reveal.Content hidden style={{width: '100%'}}><Button basic fluid color="red" content="Unfollow" /></Reveal.Content>
-          </Reveal>
+                <Reveal animated="move">
+                  <Reveal.Content visible style={{width: '100%'}}><Button fluid color="teal" content="Following" /></Reveal.Content>
+                  <Reveal.Content hidden style={{width: '100%'}}><Button basic fluid color="red" content="Unfollow" /></Reveal.Content>
+                </Reveal>
+              </>
+            )
+          }
         </Grid.Column>
       </Grid>
     </Segment>

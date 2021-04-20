@@ -1,4 +1,4 @@
-import { APP_LOADED, ASYNC_ACTION_ERROR, ASYNC_ACTION_FINISH, ASYNC_ACTION_START, CLOSE_MODAL, OPEN_MODAL } from "../types";
+import { APP_LOADED, ASYNC_ACTION_ERROR, ASYNC_ACTION_FINISH, ASYNC_ACTION_START } from "../types";
 
 const initialState = {
   loading: false,
