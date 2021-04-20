@@ -12,6 +12,17 @@ import AppLoader from '../../components/AppLoader';
 import { Redirect } from 'react-router';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import CustomSelectInput from '../../components/form/CustomSelectInput';
+import CustomDateInput from '../../components/form/CustomDateInput';
+
+const categoryOptions = [
+  {key: 'drinks', text: 'Drinks', value: 'drinks'},
+  {key: 'culture', text: 'Culture', value: 'culture'},
+  {key: 'film', text: 'Film', value: 'film'},
+  {key: 'food', text: 'Food', value: 'food'},
+  {key: 'music', text: 'Music', value: 'music'},
+  {key: 'travel', text: 'Travel', value: 'travel'},
+];
 
 const CreateEvent = ({ match, history }) => {
   const [loadingCancel, setLoadingCancel] = useState(false);
@@ -86,13 +97,19 @@ const CreateEvent = ({ match, history }) => {
               <Form className="ui form">
                 <Header sub color="teal" content="Event Details" />
                 <CustomTextInput name="title" placeholder="Event title" />
-                <CustomTextInput name="category" placeholder="Category" />
+                <CustomSelectInput name="category" placeholder="Category" options={categoryOptions} />
                 <CustomTextArea rows={3} name="description" placeholder="Description" />
 
                 <Header sub color="teal" content="Location Details" />
                 <CustomTextInput name="city" placeholder="City" />
                 <CustomTextInput name="venue" placeholder="Venue" />
-                <CustomTextInput type="date" name="date" placeholder="Date" />
+                <CustomDateInput  
+                  name="date" 
+                  placeholderText="Date"
+                  timeFormat="HH:mm"
+                  showTimeSelect
+                  timeCaption="time"
+                  dateFormat="MMMM d, yyyy h:mm a"/>
 
                 {
                   (selectedEvent) && (
@@ -111,7 +128,7 @@ const CreateEvent = ({ match, history }) => {
                   disabled={!isValid || !dirty || isSubmitting }
                   type="submit" floated="right" positive content="Submit" />
 
-                <Button type="button" floated="right" content="Cancel" onClick={() => history.push('/')}/>
+                <Button type="button" floated="right" content="Cancel" onClick={() => history.push('/events')}/>
               </Form>
             )}
       </Formik>

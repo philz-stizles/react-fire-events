@@ -1,4 +1,4 @@
-// import { format } from "date-fns";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -50,7 +50,7 @@ const EventDetailHeader = ({ event, isGoing, isHost }) => {
   return (
     <Segment.Group>
       <Segment basic attached="top" style={{ padding: "0" }}>
-        <Image style={eventImageStyle} src={`./../../assets/categoryImages/drinks.jpg`} fluid />
+        <Image style={eventImageStyle} src="../../assets/categoryImages/drinks.jpg" fluid />
 
         <Segment basic style={eventImageTextStyle}>
           <Item.Group>
@@ -61,8 +61,7 @@ const EventDetailHeader = ({ event, isGoing, isHost }) => {
                   content="Event Title"
                   style={{ color: "white" }}
                 />
-                <p>{date}</p>
-                {/*<p>{format(date, 'MMM d, yyyy h:mm a')}</p>*/}
+                <p>{format(date, 'MMM d, yyyy h:mm a')}</p>
                 <p>Hosted by <strong><Link to={`/profile/${hostUid}`}>{hostedBy}</Link></strong></p>
               </Item.Content>
             </Item>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Segment, Item, Button, Icon, Label } from 'semantic-ui-react';
-// import { format } from 'date-fns';
+import { format } from 'date-fns';
 import EventAttendeeList from './EventAttendeeList';
 import { deleteEventInFirestore } from '../../api/firestoreServices';
 
@@ -27,8 +27,7 @@ const EventListItem = ({ event }) => {
 
       <Segment>
         <span>
-          {/* format(date, 'MMMM d, yyyy h:mm a') */}
-          <Icon name="clock" /> {date}
+          <Icon name="clock" /> {format(date, 'MMMM d, yyyy h:mm a')}
           <Icon name="marker" /> {venue}
         </span>
       </Segment>

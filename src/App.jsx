@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 // Pages
 import Home from './pages/Home';
 import EventsPage from './pages/events/Events';
-import CreateEventPage from './pages/events/CreateEvent';
+import CreateEventPage from './pages/events/CreateOrUpdateEvent';
 import PeoplePage from './pages/People';
 import EventDetailPage from './pages/events/EventDetail';
 import ModalManager from './components/modals/ModalManager';

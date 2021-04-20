@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Segment, Button, Header } from 'semantic-ui-react';
 import * as Yup from 'yup';
 import { updateEvent } from '../../redux/actions/eventActions';
+import CustomSelectInput from './CustomSelectInput';
 import CustomTextArea from './CustomTextArea';
 import CustomTextInput from './CustomTextInput';
 
@@ -54,7 +55,7 @@ const EventForm = ({ closeForm, createEvent, match }) => {
               <Form className="ui form">
                 <Header sub color="teal" content="Event Details" />
                 <CustomTextInput name="title" placeholder="Event title" />
-                <CustomTextInput name="category" placeholder="Category" />
+                <CustomSelectInput name="category" placeholder="Category" options={categoryOptions} />
                 <CustomTextArea rows={3} name="description" placeholder="Description" />
 
                 <Header sub color="teal" content="Location Details" />
@@ -74,4 +75,5 @@ const EventForm = ({ closeForm, createEvent, match }) => {
   )
 }
 
-export default EventForm
+export default EventForm;
+

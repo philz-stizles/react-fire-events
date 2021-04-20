@@ -22,6 +22,7 @@ export const transformSnapshot = (snapshot) => {
 }
 
 // Retrieve events collection from firestore
+// export const listenToEventsFromFirestore = () => db.collection('events');
 export const listenToEventsFromFirestore = (predicate) => {
   console.log(predicate)
   const user = firebase.auth().currentUser;
@@ -167,5 +168,21 @@ export const cancelUserAttendance = async (eventId) => {
     })
   } catch (error) {
     throw(error);
+  }
+}
+
+export const getUserEvents = async (userUid, activeTab) => {
+  const eventsRef = db.collection('events');
+  const today = new Date();
+
+  switch (activeTab) {
+    case 1: // Past Events
+      return eventsRef
+        .where('attendeesIds', 'array-contains', userUid)
+        .where('date', '')
+        .orderBy('date', 'desc');
+  
+    default:
+      break;
   }
 }
