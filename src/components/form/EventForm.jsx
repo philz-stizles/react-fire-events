@@ -7,6 +7,15 @@ import { updateEvent } from '../../redux/actions/eventActions';
 import CustomTextArea from './CustomTextArea';
 import CustomTextInput from './CustomTextInput';
 
+const categoryOptions = [
+    {key: 'drinks', text: 'Drinks', value: 'drinks'},
+    {key: 'culture', text: 'Culture', value: 'culture'},
+    {key: 'film', text: 'Film', value: 'film'},
+    {key: 'food', text: 'Food', value: 'food'},
+    {key: 'music', text: 'Music', value: 'music'},
+    {key: 'travel', text: 'Travel', value: 'travel'},
+];
+
 const EventForm = ({ closeForm, createEvent, match }) => {
   const dispatch = useDispatch();
   const selectedEvent = useSelector(state => {
