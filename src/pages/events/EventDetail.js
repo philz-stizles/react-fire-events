@@ -19,8 +19,8 @@ const EventDetail = ({ match }) => {
   const event = useSelector(state => {
     return state.events.items.find(item => item.id === match.params.id);
   });
-  const isHost = currentUser.uid === event?.hostUid;
-  const isGoing = event?.attendees?.some(a => a.id === currentUser.uid);
+  const isHost = currentUser?.uid === event?.hostUid;
+  const isGoing = event?.attendees?.some(a => a.id === currentUser?.uid);
 
   const { loading, error } = useSelector(state => state.async);
 

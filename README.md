@@ -16,7 +16,7 @@ FIREBASE
     -- Good for chat applications
     -- Cost: 
 2.) Firestore
-    -- Cost: Firestore is based on the number of queries
+    -- Cost: Firestore costing is based on the number of queries so be mindful of this when you are using this.
     -- It is optimized for reading data rather than writing data
     -- NoSQL database
     -- More structured and scalable than firebase
@@ -25,7 +25,16 @@ FIREBASE
     -- Live updates on changes
     -- Each document can have a max of 1mb of data => approximately 1 million characters
     -- 20, 000 items in an array
-    Relations are not as easy
+    -- Relations are not as easy
+    -- Be mindful of the cost per number of requests when designing you firestore CRUD infrastructure
+3.) Cloud Functions
+    -- They run code in the cloud
+    -- They auto scale and are higly available
+    -- First 2million invocations of the cloud functions is free. Then $0.40 per 1million after
+    -- Cloud functions can write to any part of the app with full permissions. You have admin permissions with cloud functions
+    -- You can try getting rid of unnecessary data in firestore using cron jobs to lower data storage, depending on of business requirements allow
+    -- Cron jobs can be used to schedule when cloud functions happen e.g deleting chats older than a specific date to reduce the data usade and manage firebasse limitations
+
 
 STYLING
 semantic-ui-react 
@@ -55,3 +64,6 @@ Note that react-datepicker also uses date-fns. If you are having any issues, try
 
 ASYNCHRONOUS
 redux-thunk allows us to use the store dispatch function inside our action creators
+
+
+### TODOS

@@ -7,7 +7,7 @@ import Navbar from './components/Navbar';
 // Pages
 import Home from './pages/Home';
 import EventsPage from './pages/events/Events';
-import CreateEventPage from './pages/events/CreateOrUpdateEvent';
+import CreateOrUpdateEventPage from './pages/events/CreateOrUpdateEvent';
 import PeoplePage from './pages/People';
 import EventDetailPage from './pages/events/EventDetail';
 import ModalManager from './components/modals/ModalManager';
@@ -17,6 +17,7 @@ import { useSelector } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import AppLoader from './components/AppLoader';
 import ErrorPage from './pages/errors/Error';
+import PrivateRoute from './routes/PrivateRoute';
 
 const App = () => {
   const { initialized } = useSelector(state => state.async);
@@ -34,12 +35,11 @@ const App = () => {
           <Container className="main">
             <Switch>
               <Route exact path="/events" component={EventsPage} />
-              <Route exact path="/events/create" component={CreateEventPage} />
-              <Route exact path="/events/create/:id" component={CreateEventPage} />
+              <PrivateRoute exact path={["/events/create", "/events/create/:id"]} component={CreateOrUpdateEventPage} />
               <Route exact path="/events/:id" component={EventDetailPage} />
               <Route exact path="/events" component={PeoplePage} />
-              <Route exact path="/account" component={AccountPage} />
-              <Route exact path="/profile/:id" component={ProfilePage} />
+              <PrivateRoute exact path="/account" component={AccountPage} />
+              <PrivateRoute exact path="/profile/:id" component={ProfilePage} />
               <Route exact path="/error" component={ErrorPage} />
             </Switch>
           </Container>

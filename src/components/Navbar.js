@@ -9,9 +9,9 @@ import { fireSignOut } from '../api/firebaseServices';
 import defaultAvatar from './../assets/img/user.png';
 
 const Navbar = () => {
-  const { isAuthenticated, currentUser } = useSelector(state => state.auth);
+  const { isAuthenticated } = useSelector(state => state.auth);
   const {  currentUserProfile } = useSelector(state => state.profile);
-  console.log(currentUser, currentUserProfile)
+  // console.log(currentUser, currentUserProfile)
   const dispatch = useDispatch();
   const history = useHistory();
 

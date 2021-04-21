@@ -25,7 +25,7 @@ const Profile = ({ match }) => {
   }
 
   // if(error) return <Redirect to="/error" />;
-console.log(selectedUserProfile)
+// console.log(selectedUserProfile)
 
   return (
     <Grid>

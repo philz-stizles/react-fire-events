@@ -7,6 +7,7 @@ import EventFilters from '../../components/events/EventFilters';
 import EventListItemPlaceholder from '../../components/events/EventListItemPlaceholder';
 import useFirestoreCollection from '../../api/hooks/useFirestoreCollection';
 import { listenForEvents } from '../../redux/actions/eventActions';
+import EventsFeed from '../../components/events/EventsFeed';
 
 const Events = () => {
   const [predicate, setPredicate] = useState(new Map([
@@ -15,6 +16,7 @@ const Events = () => {
   ]));
   const { items: events } = useSelector(state => state.events);
   const { loading } = useSelector(state => state.async);
+  const { isAuthenticated } = useSelector(state => state.auth);
   const dispatch = useDispatch();
 
   useFirestoreCollection({
@@ -42,6 +44,7 @@ const Events = () => {
       </Grid.Column>
 
       <Grid.Column width={6}>
+        {(isAuthenticated) && <EventsFeed />}
         <EventFilters predicate={predicate} setPredicate={handleSetPredicate} loading={loading} />
       </Grid.Column>
     </Grid>

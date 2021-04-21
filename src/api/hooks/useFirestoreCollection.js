@@ -16,7 +16,10 @@ const useFirestoreCollection = ({ query, data, deps }) => {
 
       // Set loading to false in redux 
       dispatch(asyncActionFinish());
-    }, error => dispatch(asyncActionError()));
+    }, error => {
+      console.log(error.message)
+      dispatch(asyncActionError(error));
+    });
     
     return () => {
       unSubscribe();

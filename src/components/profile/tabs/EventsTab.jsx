@@ -1,11 +1,24 @@
 import { format } from 'date-fns';
-import React from 'react'
+import React from 'react';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button, Card, Grid, Header, Image, Tab } from 'semantic-ui-react';
+import { Card, Grid, Header, Image, Tab } from 'semantic-ui-react';
+import { getUserEvents } from '../../../api/firestoreServices';
+import useFirestoreCollection from '../../../api/hooks/useFirestoreCollection';
+import { listenToUserEvents } from '../../../redux/actions/profileActions';
 
-const EventsTab = ({isCurrentUser, profile}) => {
+const EventsTab = ({profile}) => {
   const [activeTab, setActiveTab] = useState(0);
+  const { profileEvents } = useSelector(state => state.profile );
+  const { loading } = useSelector(state => state.async );
+  const dispatch = useDispatch();
+
+  useFirestoreCollection({
+    query: () => getUserEvents(profile.id, activeTab),
+    data: events => dispatch(listenToUserEvents(events)),
+    deps: [profile.id, activeTab, dispatch]
+  });
 
   const panes = [
     { menuItem: 'Future Events', pane: { key: 'future' } },
@@ -14,7 +27,7 @@ const EventsTab = ({isCurrentUser, profile}) => {
   ];
 
   return (
-    <Tab.Pane>
+    <Tab.Pane loading={loading}>
       <Grid>
         <Grid.Column width={16}>
           <Header floated="left" icon="calendar" content="Events" />
@@ -27,16 +40,20 @@ const EventsTab = ({isCurrentUser, profile}) => {
             menu={{ secondary: true, pointing: true }}
           />
           <Card.Group itemsPerRow={5} style={{ marginTop: 10 }}>
-            <Card as={Link} to={`/events`}>
-              <Image src="/assets/categoryImages/drinks/jpg" style={{ minHeight: 100, objectFit: 'cover' }} />
-              <Card.Content>
-                <Card.Header content="Title" textAlign="center"></Card.Header>
-                <Card.Meta textAlign="center">
-                  <div>Date</div>
-                  <div>Time</div>
-                </Card.Meta>
-              </Card.Content>
-            </Card>
+            {
+              profileEvents.map(({id, title, category, date}) => (
+                <Card as={Link} to={`/events/${id}`} key={id}>
+                  <Image src={`/assets/categoryImages/${category}.jpg`} style={{ minHeight: 100, objectFit: 'cover' }} />
+                  <Card.Content>
+                    <Card.Header content={title} textAlign="center" />
+                    <Card.Meta textAlign="center">
+                      <div>{format(date, 'dd MMM yyyy')}</div>
+                      <div>{format(date, 'hh:mm a')}</div>
+                    </Card.Meta>
+                  </Card.Content>
+                </Card>
+              ))
+            }
           </Card.Group>
         </Grid.Column>
       </Grid>

@@ -171,18 +171,103 @@ export const cancelUserAttendance = async (eventId) => {
   }
 }
 
-export const getUserEvents = async (userUid, activeTab) => {
-  const eventsRef = db.collection('events');
+export const getUserEvents = (userUid, activeTab) => {
+  let eventsRef = db.collection('events');
   const today = new Date();
 
   switch (activeTab) {
-    case 1: // Past Events
+    case 1: // Past Events - events that the user was an attendee, and the date is less than or equal to today
+      console.log(1)
       return eventsRef
         .where('attendeesIds', 'array-contains', userUid)
-        .where('date', '')
+        .where('date', '<=', today)
         .orderBy('date', 'desc');
+
+    case 2: // Hosting - events that the user is a host
+      console.log(2)
+      return eventsRef
+        .where('hostUid', '==', userUid)
+        .orderBy('date');
   
-    default:
-      break;
+    default: // Future Events - events that the user is an attendee
+      console.log('others')
+      return eventsRef
+        .where('attendeesIds', 'array-contains', userUid)
+        .where('date', '>=', today)
+        .orderBy('date');
   }
+}
+
+// This function is a candidate for firebase batching because we are performing multiple requests. 
+// The function is only valid if all the requests are successful. 
+// With firebase batching, if any one request fails, then the entire function fails and any successful requests 
+// besides the failed request(s) will be rolled back
+export const followUser = async (profile) => {
+  const user = firebase.auth().currentUser;
+  const batch = db.batch();
+  try {
+
+    batch.set(db.collection('followership').doc(user.uid).collection('userFollowing').doc(profile.id), {
+      uid: profile.id,
+      displayName: profile.displayName,
+      photoURL: profile.photoURL
+    });
+
+    batch.set(db.collection('followership').doc(profile.id).collection('userFollowers').doc(profile.id), {
+      uid: user.uid,
+      displayName:user.displayName,
+      photoURL:user.photoURL
+    });
+
+    batch.update(db.collection('users').doc(user.uid), { 
+      followingCount: firebase.firestore.FieldValue.increment(1) 
+    })
+
+    batch.update(db.collection('users').doc(profile.id), { 
+      followerCount: firebase.firestore.FieldValue.increment(1) 
+    })
+
+    return await batch.commit();
+
+  } catch (error) {
+    console.log(error)
+    throw(error);
+  }
+}
+
+export const unFollowUser = async (profile) => {
+  const user = firebase.auth().currentUser;
+  const batch = db.batch();
+
+  try {
+    batch.delete(db.collection('followership').doc(user.uid).collection('userFollowings').doc(profile.id));
+
+    batch.delete(db.collection('followership').doc(profile.id).collection('userFollowers').doc(profile.id));
+
+    batch.update(db.collection('users').doc(user.uid), { 
+      followingCount: firebase.firestore.FieldValue.increment(-1) 
+    })
+
+    batch.update(db.collection('users').doc(profile.id), { 
+      followerCount: firebase.firestore.FieldValue.increment(-1) 
+    })
+
+    return await batch.commit();
+
+  } catch (error) {
+    throw(error);
+  }
+}
+
+export const getFollowersCollection = (profileId) => {
+  return db.collection('followership').doc(profileId).collection('userFollowers');
+}
+
+export const getFollowingsCollection = (profileId) => {
+  return db.collection('followership').doc(profileId).collection('userFollowings');
+}
+
+export const getFollowingDoc = (profileId) => {
+  const userUid = firebase.auth().currentUser.uid;
+  return db.collection('followership').doc(userUid).collection('userFollowings').doc(profileId).get();
 }

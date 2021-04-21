@@ -1,0 +1,25 @@
+[debug] [2021-04-21T22:31:50.486Z] ----------------------------------------------------------------------
+[debug] [2021-04-21T22:31:50.488Z] Command:       C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2021-04-21T22:31:50.488Z] CLI Version:   9.10.0
+[debug] [2021-04-21T22:31:50.488Z] Platform:      win32
+[debug] [2021-04-21T22:31:50.488Z] Node Version:  v14.15.0
+[debug] [2021-04-21T22:31:50.489Z] Time:          Wed Apr 21 2021 23:31:50 GMT+0100 (West Africa Standard Time)
+[debug] [2021-04-21T22:31:50.489Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-04-21T22:31:50.496Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-04-21T22:31:50.496Z] > authorizing via signed-in user (theophilusighalo@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\theop\OneDrive\Documents\ICT\iii. Practise\Fullstack\react-fire-events
+
+Before we get started, keep in mind:
+
+  * You are initializing in an existing Firebase project directory
+
