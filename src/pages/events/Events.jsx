@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Grid } from 'semantic-ui-react';
+import { Grid, Loader } from 'semantic-ui-react';
 import EventList from '../../components/events/EventList';
 import { useDispatch, useSelector } from 'react-redux';
 // import { listenToEventsFromFirestore } from '../../api/firestoreServices';
@@ -64,19 +64,27 @@ const Events = () => {
             </>
           )
         }
-        <EventList events={events} />
-        <Button
-          loading={loading} 
-          disabled={loading || !moreEvents}
-          fluid 
-          color="green" 
-          content="Load more..." 
-          onClick={handleFetchNextEvents} />
+        <EventList 
+          loading={loading}
+          events={events} 
+          getNextEvents={handleFetchNextEvents}
+          moreEvents={moreEvents} />
+        {/* <Button
+              loading={loading} 
+              disabled={loading || !moreEvents}
+              fluid 
+              color="green" 
+              content="Load more..." 
+              onClick={handleFetchNextEvents} />*/}
       </Grid.Column>
 
       <Grid.Column width={6}>
         {(isAuthenticated) && <EventsFeed />}
         <EventFilters predicate={predicate} setPredicate={handleSetPredicate} loading={loading} />
+      </Grid.Column>
+
+      <Grid.Column width={10}>
+        <Loader active={loading} />
       </Grid.Column>
     </Grid>
   )

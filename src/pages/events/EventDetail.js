@@ -10,15 +10,17 @@ import useFirestoreDoc from "../../api/hooks/useFirestoreDoc";
 import { useSelector } from "react-redux";
 import { listenToEventFromFirestore } from "../../api/firestoreServices";
 import { useDispatch } from "react-redux";
-import { listenForEvents } from '../../redux/actions/eventActions';
+import { listenToSelectedEvent } from '../../redux/actions/eventActions';
 import AppLoader from './../../components/AppLoader';
 import { Redirect } from "react-router";
 
 const EventDetail = ({ match }) => {
   const { currentUser } = useSelector(state => state.auth);
-  const event = useSelector(state => {
-    return state.events.items.find(item => item.id === match.params.id);
-  });
+  // const event = useSelector(state => {
+  //   return state.events.items.find(item => item.id === match.params.id);
+  // });
+
+  const event = useSelector(state => state.events.selectedEvent);
   const isHost = currentUser?.uid === event?.hostUid;
   const isGoing = event?.attendees?.some(a => a.id === currentUser?.uid);
 
@@ -28,7 +30,7 @@ const EventDetail = ({ match }) => {
   
   useFirestoreDoc({
     query: () => listenToEventFromFirestore(match.params.id),
-    data: event => dispatch(listenForEvents([event])),
+    data: event => dispatch(listenToSelectedEvent(event)),
     deps: [match.params.id, dispatch]
   });
 

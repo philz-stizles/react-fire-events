@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Header, Menu } from 'semantic-ui-react';
 import Calendar from 'react-calendar';
+import { useSelector } from 'react-redux';
+import UnAuthenticatedModal from '../modals/UnAuthenticatedModal';
 
 const EventFilters = ({ predicate, setPredicate, loading }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { isAuthenticated } = useSelector(state => state.auth);
+
   return (
     <>
+    {(isModalOpen) && <UnAuthenticatedModal setIsModalOpen={setIsModalOpen} />}
       <Menu vertical size="large" style={{ width: '100%' }}>
         <Header icon="filter" attached color="teal" content="Filters" />
         <Menu.Item 
@@ -15,7 +21,7 @@ const EventFilters = ({ predicate, setPredicate, loading }) => {
 
         <Menu.Item 
           active={predicate.get('filter') === 'isGoing'} 
-          onClick={() => setPredicate('filter', 'isGoing')}
+          onClick={() => (isAuthenticated) ? setPredicate('filter', 'all') : setIsModalOpen(true)}
           content="I'm going" 
           disabled={loading} />
 

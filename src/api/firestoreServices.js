@@ -62,11 +62,10 @@ export const fetchEventsFromFirestore = (
   lastDocSnapshot = null,
   limit
 ) => {
-  console.log(predicate);
   const user = firebase.auth().currentUser;
   let eventRef = db
     .collection("events")
-    .orderBy('date', 'desc')
+    .orderBy('date')
     .startAfter(lastDocSnapshot)
     .limit(limit);
 
@@ -82,12 +81,13 @@ export const fetchEventsFromFirestore = (
       console.log(user.uid);
       return eventRef
         .where("hostUid", "==", user.uid)
-        .where('date', '>=', predicate.get('startDate'))
+        .where('date', '>=', predicate.get('startDate'));
 
     default:
       console.log("all");
+      console.log(eventRef);
       return eventRef
-        .where('date', '>=', predicate.get('startDate'))
+        .where('date', '>=', predicate.get('startDate'));
   }
 };
 
