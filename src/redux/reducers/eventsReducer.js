@@ -1,17 +1,25 @@
-import { CLEAR_EVENT_CHAT, CREATE_EVENT, DELETE_EVENT, FETCH_EVENTS, LISTEN_TO_EVENT_CHAT, UPDATE_EVENT } from "../types";
+import { CLEAR_EVENTS, CLEAR_EVENT_CHAT, CREATE_EVENT, DELETE_EVENT, FETCH_EVENTS, LISTEN_TO_EVENT_CHAT, UPDATE_EVENT } from "../types";
 
 const initialState = {
   items: [],
-  comments: []
+  comments: [],
+  moreEvents: true
 }
 
 const eventsReducer = (state = initialState, { type, payload }) => {
   switch (type) {
 
+  // case FETCH_EVENTS:
+  //   return { 
+  //     ...state, 
+  //     items: payload 
+  //   };
+  
   case FETCH_EVENTS:
     return { 
       ...state, 
-      items: payload 
+      items: [...state.items, ...payload.events],
+      moreEvents: payload.moreEvents 
     };
 
   case CREATE_EVENT:
@@ -42,6 +50,13 @@ const eventsReducer = (state = initialState, { type, payload }) => {
       return { 
         ...state, 
         comments: []
+      };
+  
+  case CLEAR_EVENTS:
+      return { 
+        ...state, 
+        items: [],
+        moreEvents: true
       };
 
   default:

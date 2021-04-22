@@ -1,5 +1,6 @@
-import React from 'react'
-import { Feed, Header, Segment } from 'semantic-ui-react'
+import React from 'react';
+import { Feed, Header, Segment } from 'semantic-ui-react';
+import defaultAvatar from './../../assets/img/user.png';
 
 const EventsFeed = () => {
   return (
@@ -7,7 +8,7 @@ const EventsFeed = () => {
       <Header attached color="teal" icon="newspaper" content="New feed" />
       <Segment attached="bottom">
         <Feed>
-          <Feed.Event image={image} />
+          <Feed.Event image={defaultAvatar} date={`date`} summary={`summary`}/>
         </Feed>
       </Segment>
     </>
