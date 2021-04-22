@@ -72,13 +72,14 @@ export const fetchEventsFromFirestore = (
   switch (predicate.get("filter")) {
     case "isGoing":
       console.log("isGoing");
+      console.log(" user.uid",  user.uid);
       return eventRef
         .where("attendeesIds", "array-contains", user.uid)
         .where('date', '>=', predicate.get('startDate'));
 
     case "isHosting":
       console.log("ishosting");
-      console.log(user.uid);
+      console.log("user.uid",  user);
       return eventRef
         .where("hostUid", "==", user.uid)
         .where('date', '>=', predicate.get('startDate'));
